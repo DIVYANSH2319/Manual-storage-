@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+contract RareStorageHack {
+    // Public variable (stored at slot 0)
+    uint256 public secret;
+
+    constructor(uint256 _secret) {
+        secret = _secret;
+    }
+
+    // Returns the raw value in any given storage slot
+    function readStorage(uint256 slot) public view returns (bytes32 value) {
+        assembly {
+            value := sload(slot)
+        }
+    }
+
+    // Directly writes a value to a specific storage slot (onlyOwner in real use)
+    function writeStorage(uint256 slot, bytes32 newValue) public {
+        assembly {
+            sstore(slot, newValue)
+        }
+    }
+
+    // Returns the storage slot of the `secret` variable
+    function getSecretSlot() public pure returns (uint256) {
+        return 0; // Because secret is the first variable
+    }
+}
